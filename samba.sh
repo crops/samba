@@ -14,10 +14,11 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-shareowner="$(stat -c %u /workdir)"
-if [ "$shareowner" != "1000" ]; then
-    echo "The owner of /workdir is not 1000. Make sure you specified the" \
-	 "correct volume and that the uid and gid is set to 1000."
+shareowner="$(stat -c %u /workdir):$(stat -c %g /workdir)"
+if [ "$shareowner" != "1000:1000" ]; then
+    echo "The owner of /workdir is not 1000:1000, it is $shareowner. Make" \
+	 "sure you specified the correct volume and that the uid and gid are" \
+	 "set to 1000."
     exit 1
 fi
 
