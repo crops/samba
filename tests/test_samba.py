@@ -101,8 +101,8 @@ def bad_uid_gid(volume, request):
     return request.param
 
 @pytest.fixture
-def mount_samba(run_samba):
-    mountpoint = tempfile.mkdtemp(prefix="samba-mount")
+def mount_samba(run_samba, tmpdir):
+    mountpoint = str(tmpdir)
 
     cmd = "sudo mount -t cifs -o guest //localhost/workdir {}"
     cmd = shlex.split(cmd.format(mountpoint))
@@ -110,11 +110,8 @@ def mount_samba(run_samba):
 
     yield mountpoint
 
-    try:
-        cmd = shlex.split("sudo umount {}".format(mountpoint))
-        subprocess.run(cmd, check=True)
-    finally:
-        shutil.rmtree(mountpoint)
+    cmd = shlex.split("sudo umount {}".format(mountpoint))
+    subprocess.run(cmd, check=True)
 
 def test_container_expected_fail(bad_uid_gid, container):
     cmd = shlex.split("docker start {}".format(container))
