@@ -1,0 +1,21 @@
+language: python
+python:
+  - '3.5'
+
+sudo: required
+
+services: docker
+
+env:
+  global:
+  - REPO=crops/samba
+  - secure: wXhvWWr7JeceVx1I1q7iC3ZVngwKJeC62ygKQ6d05f276OO6Hp7fQ6BaTx1VDurpVPyZjOIlguppAwlNKrj7QQJlRCDj1s3yIZRrKEy84SBuhLt2ufacepYmjpUkNAfAHSe+8GJD3XgD09uJd5YjZw4Ba55clVfSA5U7H6asG2UAYIEta930IOuOLN/DS30trt0sfoNSMcHjBNzGYKXpvCvTkk7JYt7dVJ41AGDaqc88gMxuW1SUyd1PU6q+k9Yf3xKmb77ITCXkLfXH4ODhNiSOuKrdPMtR4GSZYca4PjIZvcYlCT+S98/dfnqL7ihj9OJXiq9lWDeDpBpYfADNInQHagr4oiczSYlmnbNaW1pcnXii8x7QUU2rCbmtu4LQDs2E8baw8KbSIbk4EbkOmCLbBlqTxigrUH+5gUuD+c0YlHva+zmnfbpIoQgbP7noMjlcOooXAZKazaTRqYoXC8HaXf6RhGR5+u2jYadQF3zb+nUHv+VCXdStsNRXO2vKe1BRbSlXLfRg9cUIJlr9evObL6ec+ihKHoj7LJ8eBHC++QhGCd7LQuxdQGTBLwgeCfRfmJ6ESn0rQ85BGaHX//V2AQcz1gzHF6Vg0Y8DO+fpG6jf0j5T4ZqznyiPB33NgrNST9rOVqalVDJjvWBcbEbHn4BI+AIdAZdaUAOYDtw=
+  - secure: xTZH2Q/A+yi47BB45ed/dlsk7RYMqXKhRhV6SUk0r5vDnS9iiD3l/PqWp1Ct7rbKB3R8/EC/NkY6P6Umx5jJDnZjfRnmsgcU4wWUxTypGhiSkfwvjfEslalW2l8p1DtLcnMEbCetQIvXZA4rEpccrQUov45dKB9nodxt2E94i5sxsXwevph4I0oEaeZoXlm3QpRlgQN/VB1tNspnbSYJ00I9yFSRfJGhgTf+re1jhc/cEvWD6rdlAdZa3iXEawf6zRca4+H8hjjc5j2817VlpixbnkaakIKOQ8VI2SNSDQitOtLdYEVcpuE/OWPYzP4kB4S6NbAg9vB0XkOvB/etFr9JEzuq1QT0Ad2miJQHJwJjABv54sPRWUqIbX+uJIUcMeGfsAYQLCujSPPIVHYqvOfCsOtDDUlZvfwecFWg2ti5OXa8gdkAfTu7gaxcPNcCjQ1QmxUmE9sVhTGrOM9XIk9seyY1WhFpSSdM1YKJQuUS811jTLTFVDfxLWD+Mg1aVFNDzrStG3lnolZvs8ASw6gn4zg1PFF8v+Ww5pvmZYDtMEk6Yah1+I+76tLvAaMI/yW714itjm9oqjKmcQKwAqyFKkCN6L473E5tFCBCGyxNbBNSTR1y7CzB82dxxBE/qkt3pgmoisW3kH95IL+pZVr5rvDngMuMY/fis5mbjNg=
+
+before_install:
+- pip install pytest>3.0
+- sudo apt-get -y install cifs-utils
+
+script:
+- docker build -t ${REPO} .
+- pytest -v && bash deploy.sh
