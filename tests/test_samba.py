@@ -85,6 +85,11 @@ def run_samba(container):
     output = docker_logs_wait(startedstring, container, 10)
     assert startedstring in output
 
+    startedstring = ("STATUS=daemon 'nmbd' finished starting up and ready to "
+                     "serve connections")
+    output = docker_logs_wait(startedstring, container, 10)
+    assert startedstring in output
+
     yield
 
     cmd = shlex.split("docker stop {}".format(container))
@@ -143,3 +148,19 @@ def test_create_file(mount_samba):
 
     stat_result = os.stat(newfile)
     assert stat_result.st_uid == 1000 and stat_result.st_gid == 1000
+
+def test_netbios_name(run_samba):
+    # Even though nmbd says it is up and running there seems to be a small
+    # delay before names actually start resolving. So loop for 10 seconds
+    # trying.
+    count = 0
+    while (count < 10):
+        cmd = shlex.split("nmblookup crops-samba")
+        result = subprocess.run(cmd, check=False)
+        if result.returncode == 0:
+            break
+
+        time.sleep(1)
+        count = count + 1
+
+    assert result.returncode == 0
