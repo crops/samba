@@ -104,7 +104,7 @@ def bad_uid_gid(volume, request):
 def mount_samba(run_samba, tmpdir):
     mountpoint = str(tmpdir)
 
-    cmd = "sudo mount -t cifs -o guest //localhost/workdir {}"
+    cmd = "sudo mount -t cifs -o guest //127.0.0.1/workdir {}"
     cmd = shlex.split(cmd.format(mountpoint))
     subprocess.run(cmd, check=True)
 
