@@ -22,5 +22,4 @@ if [ "$shareowner" != "1000:1000" ]; then
     exit 1
 fi
 
-/usr/sbin/nmbd -FS &
 exec /usr/sbin/smbd -FS
