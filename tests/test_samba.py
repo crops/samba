@@ -17,6 +17,7 @@ import pytest
 import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 import uuid
@@ -131,7 +132,7 @@ def test_mount(mount_samba):
     pass
 
 # Create a file and make sure the uid and gid are correct
-def test_create_file(mount_samba):
+def test_create_file(mount_samba, testimage, volume):
     mountpoint = mount_samba
 
     # Create a file as root to really make sure the uid and gid are being
@@ -141,5 +142,16 @@ def test_create_file(mount_samba):
 
     subprocess.run(cmd, check=True)
 
-    stat_result = os.stat(newfile)
-    assert stat_result.st_uid == 1000 and stat_result.st_gid == 1000
+    # Check in the uid:gid in the container, not what is reported by the server.
+    realfile = os.path.join("/workdir", "testfile")
+    cmd = 'docker run -t --rm -v {}:/workdir {} stat --printf %u:%g {}'
+    cmd = shlex.split(cmd.format(volume, testimage, realfile))
+
+    try:
+        sp = subprocess.run(cmd, check=True, capture_output=True)
+        assert sp.stdout.decode() == "1000:1000"
+
+    except subprocess.CalledProcessError as e:
+        print(e.stdout.decode())
+        print(e.stderr.decode(), file=sys.stderr)
+        raise
