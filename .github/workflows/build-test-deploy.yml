@@ -28,7 +28,7 @@ jobs:
       - name: test
         run: |
           pip install pytest>3.0
-          apt-get install -y cifs-utils
+          sudo apt-get install -y cifs-utils
           pytest -v
 
       # Deploy the images
