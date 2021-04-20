@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - actions_test
   pull_request:
 
   # Allow for manually running
