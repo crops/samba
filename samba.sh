@@ -22,4 +22,4 @@ if [ "$shareowner" != "1000:1000" ]; then
     exit 1
 fi
 
-exec /usr/sbin/smbd -FS
+exec /usr/sbin/smbd -F --debug-stdout
