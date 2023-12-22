@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
 USER root
 
