@@ -9,11 +9,16 @@
 
 set -e
 
+# Allow the user to specify another command to use for building such as podman
+if [ "${ENGINE_CMD}" = "" ]; then
+    ENGINE_CMD="docker"
+fi
+
 # Don't deploy on pull requests because it could just be junk code that won't
 # get merged
 if ([ "${GITHUB_EVENT_NAME}" = "push" ] || [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ] || [ "${GITHUB_EVENT_NAME}" = "schedule" ]) && [ "${GITHUB_REF}" = "refs/heads/master" ]; then
-    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-    docker push ${REPO}:latest
+    echo $DOCKER_PASSWORD | ${ENGINE_CMD} login -u $DOCKER_USERNAME --password-stdin
+    ${ENGINE_CMD}  push ${REPO}:latest
 else
     echo "Not pushing since build was triggered by a pull request."
 fi
