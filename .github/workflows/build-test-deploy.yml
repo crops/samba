@@ -23,6 +23,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Install packages on the runner
+      - name: install smbclient
+        run: |
+          sudo apt-get update
+          sudo apt-get install smbclient
+
       # Build the image
       - name: build
         run: docker build -t ${REPO} .
